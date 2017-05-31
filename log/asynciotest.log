@@ -1,0 +1,14 @@
+Serving on ('127.0.0.1', 56700)
+Received "hej
+" from ('127.0.0.1', 59498)
+Sending (('127.0.0.1', 59498)): hej
+
+Received "fis
+" from ('127.0.0.1', 59500)
+Sending (('127.0.0.1', 59500)): fis
+
+Serving on ('127.0.0.1', 56700)
+Received "apa" from ('127.0.0.1', 59512)
+Sending (('127.0.0.1', 59512)): apa
+Received "majs" from ('127.0.0.1', 59514)
+Sending (('127.0.0.1', 59514)): majs
