@@ -2,6 +2,7 @@ import asyncio
 import logging
 import os
 from test_commands import TEST_COMMANDS
+import re
 
 os.makedirs('./log', exist_ok=True)
 
@@ -22,7 +23,7 @@ async def handle_echo(reader, writer):
     # addr = writer.get_extra_info('peername')
     # logm = 'Received "{0}" from {1}'.format(message.strip(), addr)
     # logger.debug(logm)
-    # 
+    #
     # logger.debug("Sending ({}): {}".format(addr, message.strip()))
     # writer.write(data)
     # await writer.drain()
@@ -32,10 +33,27 @@ async def handle_echo(reader, writer):
 
     addr = writer.get_extra_info('peername')
     for cmd in TEST_COMMANDS:
-        message = cmd
-        logger.debug("Sending ({}): {}".format(addr, message.strip()))
-        writer.write(data)
+        requests = cmd['request']
+        logger.debug("Sending ({}): {}".format(addr, str(requests)))
+        # for data in requests:
+        #     writer.write(data)
+        #     await writer.drain()
+        writer.writelines([bytes(req, 'utf-8') for req in requests])
         await writer.drain()
+
+        resp_regexs = cmd['responseRegex']
+        for resp_regex in resp_regexs:
+            response = await reader.readline()
+            response = response.decode()
+            if re.match(resp_regex, response):
+                logm = 'Received "{0}" from {1}'.format(response.strip(), addr)
+                logger.debug(logm)
+            else:
+                logm = 'Received "{0}" from {1}'.format(response.strip(), addr)
+                logger.error(logm)
+
+    print("Closing client socket ({})".format(addr))
+    writer.close()
 
 
 loop = asyncio.get_event_loop()
