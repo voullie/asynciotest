@@ -1,6 +1,7 @@
 import asyncio
 import logging
 import os
+from test_commands import TEST_COMMANDS
 
 os.makedirs('./log', exist_ok=True)
 FORMAT = '%(asctime)-15s %(message)s'
